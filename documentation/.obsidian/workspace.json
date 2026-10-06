@@ -1,0 +1,221 @@
+{
+  "main": {
+    "id": "293beaf2923c8d00",
+    "type": "split",
+    "children": [
+      {
+        "id": "71fb07a6e12b310a",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "1d372ab4f77e2221",
+            "type": "leaf",
+            "state": {
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Visualização em gráfico"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "vertical"
+  },
+  "left": {
+    "id": "9d2173d814e17627",
+    "type": "split",
+    "children": [
+      {
+        "id": "4781a2c0a6c51276",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "33323642a41fb8b9",
+            "type": "leaf",
+            "state": {
+              "type": "file-explorer",
+              "state": {
+                "sortOrder": "alphabetical",
+                "autoReveal": false
+              },
+              "icon": "lucide-folder-closed",
+              "title": "Explorador de arquivos"
+            }
+          },
+          {
+            "id": "8e834423a483f0b4",
+            "type": "leaf",
+            "state": {
+              "type": "search",
+              "state": {
+                "query": "",
+                "matchingCase": false,
+                "explainSearch": false,
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical"
+              },
+              "icon": "lucide-search",
+              "title": "Procurar"
+            }
+          },
+          {
+            "id": "a30d710e1611e358",
+            "type": "leaf",
+            "state": {
+              "type": "bookmarks",
+              "state": {},
+              "icon": "lucide-bookmark",
+              "title": "Marcadores"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300
+  },
+  "right": {
+    "id": "71301d2ccc74bd40",
+    "type": "split",
+    "children": [
+      {
+        "id": "bedde1a6af176335",
+        "type": "tabs",
+        "children": [
+          {
+            "id": "e4709747633f5ff6",
+            "type": "leaf",
+            "state": {
+              "type": "backlink",
+              "state": {
+                "file": "Bem-vindo.md",
+                "collapseAll": false,
+                "extraContext": false,
+                "sortOrder": "alphabetical",
+                "showSearch": false,
+                "searchQuery": "",
+                "backlinkCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-coming-in",
+              "title": "Links inversos para Bem-vindo"
+            }
+          },
+          {
+            "id": "5c8ddfdb3a5d58b0",
+            "type": "leaf",
+            "state": {
+              "type": "outgoing-link",
+              "state": {
+                "file": "Bem-vindo.md",
+                "linksCollapsed": false,
+                "unlinkedCollapsed": true
+              },
+              "icon": "links-going-out",
+              "title": "Links de saída para Bem-vindo"
+            }
+          },
+          {
+            "id": "a983f46611e6b1bb",
+            "type": "leaf",
+            "state": {
+              "type": "tag",
+              "state": {
+                "sortOrder": "frequency",
+                "useHierarchy": true,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-tags",
+              "title": "Etiquetas"
+            }
+          },
+          {
+            "id": "03a3b780cc2cedc2",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency",
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-archive",
+              "title": "Todas as propriedades"
+            }
+          },
+          {
+            "id": "f8baabb586eccf75",
+            "type": "leaf",
+            "state": {
+              "type": "outline",
+              "state": {
+                "file": "Bem-vindo.md",
+                "followCursor": false,
+                "showSearch": false,
+                "searchQuery": ""
+              },
+              "icon": "lucide-list",
+              "title": "Sumário de Bem-vindo"
+            }
+          }
+        ]
+      }
+    ],
+    "direction": "horizontal",
+    "width": 300,
+    "collapsed": true
+  },
+  "left-ribbon": {
+    "hiddenItems": {
+      "switcher:Abrir a troca rápida": false,
+      "graph:Abrir visualização em gráfico": false,
+      "canvas:Criar novo canvas": false,
+      "daily-notes:Abrir a nota de hoje": false,
+      "templates:Inserir modelo": false,
+      "command-palette:Abrir paleta de comandos": false,
+      "bases:Criar nova base": false
+    }
+  },
+  "active": "1d372ab4f77e2221",
+  "lastOpenFiles": [
+    "README.md.tmp.23832.3e0d6e76ae3f",
+    "CLAUDE.md",
+    "README.md.tmp.23832.03885d58c5b4",
+    "PROMPT INICIAL.md",
+    "FINAL.md",
+    "final.md.tmp.23832.51a8af93ef32",
+    "final.md.tmp.23832.951a4882f751",
+    "final.md.tmp.23832.3df4012d945b",
+    "final.md.tmp.23832.075f009d185c",
+    "final.md.tmp.23832.18ca520f48c9",
+    "final.md.tmp.23832.19a62788e1cd",
+    "final.md.tmp.23832.079b74549ae2",
+    "final.md.tmp.23832.c267e2361758",
+    "final.md.tmp.23832.3e2f72d8d6bb",
+    "NOVOCLAUDE.md",
+    "final.md",
+    "PromptCodigo.md",
+    "{reports}/dead-code-unused-modules.md",
+    "NovoPrompt.md",
+    "{instructions}/separation-of-concerns.md",
+    "{instructions}/performance-audit.md",
+    "{instructions}/dry-refactoring.md",
+    "{instructions}/dead-code-audit.md",
+    "{instructions}/coding-conventions.md",
+    "{instructions}/ai-best-practices.md",
+    "{general}/vault-structure.md",
+    "NovoCLAUDEmd.md",
+    "{tools}/ai-best-practices.md",
+    "{tools}/coding-conventions.md",
+    "{reports}/dead-code-audit-report.md",
+    "{reports}/dead-code-todos.md",
+    "{reports}/dead-code-report.md",
+    "{tools}/dead-code-audit.md",
+    "project-structure.md",
+    "crie um link.md",
+    "Bem-vindo.md"
+  ]
+}

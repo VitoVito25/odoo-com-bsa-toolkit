@@ -1,6 +1,6 @@
 ---
-title: Separation of Concerns — Resultados de Audit — [NOME DO PROJETO]
-date: YYYY-MM-DD
+title: Separation of Concerns — Resultados de Audit — Odoo BSA Toolkit
+date: 2026-10-06
 tags:
   - report
   - architecture
@@ -33,4 +33,4 @@ aliases:
 
 ---
 
-Ver também: [[separation-of-concerns]] | [[dry-refactoring-report]] | [[performance-audit-report]]
+Ver também: [[separation-of-concerns]] | [[dry-refac-duplications-solved]] | [[performace-audit-report]]

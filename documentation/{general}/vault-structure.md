@@ -1,6 +1,6 @@
 ---
 title: Vault Structure
-date: YYYY-MM-DD
+date: 2026-10-06
 tags:
   - general
   - vault
@@ -12,7 +12,7 @@ aliases:
 
 # Vault Structure
 
-Mapa completo do vault `documentation/`. Referência para o agente ao criar notas novas.
+Mapa completo do vault `documentation/`. Referência para o agente ao criar notas novas. Ponto de entrada do projeto: [[project-overview]].
 
 ---
 
@@ -20,35 +20,44 @@ Mapa completo do vault `documentation/`. Referência para o agente ao criar nota
 
 ```
 documentation/
-├── {general}/                        → overviews, índices, entry points por módulo
-│   └── vault-structure.md            → este arquivo — mapa do vault
+├── {general}/                          → overviews, índices, entry points
+│   ├── vault-structure.md              → este arquivo — mapa do vault
+│   ├── project-overview.md             → o que é o toolkit, abas, arquitetura, tools
+│   ├── tool-organizador-gravacoes.md   → tool de gravações Meet (legado + alvo)
+│   └── deploy-apps-script.md           → como colar o código no editor
 │
-├── {instructions}/                          → protocolos de audit carregados por sessão (manter lean)
-│   ├── ai-best-practices.md          → contrato de comportamento do agente
-│   ├── coding-conventions.md         → nomenclatura, estrutura, stack
-│   ├── dry-refactoring.md            → protocolo DRY e rastreamento de utils
-│   ├── separation-of-concerns.md     → padrão container/presentational
-│   ├── dead-code-audit.md            → identificação e remoção de código morto
-│   └── performance-audit.md          → checklist de otimizações
+├── {instructions}/                     → protocolos carregados TODA sessão (manter lean)
+│   ├── ai-best-practices.md            → contrato de comportamento do agente
+│   ├── coding-conventions.md           → nomenclatura, estrutura, stack Apps Script
+│   ├── dry-refactoring.md              → protocolo DRY e estrutura de services/repos
+│   ├── separation-of-concerns.md       → camadas Main → tools → sheets/services
+│   ├── dead-code-audit.md              → identificação e remoção de código morto
+│   └── performance-audit.md            → checklist de performance e cotas Apps Script
 │
-├── {reports}/                        → resultados de audits (carregar sob demanda)
-│   ├── dry-refac-duplications-solved.md
-│   ├── dry-refac-extraction-pendings.md
-│   ├── dry-refac-intentionals-devergencies.md
-│   ├── separation-of-concerns-report.md
-│   ├── dead-code-audit-report.md
-│   ├── dead-code-todos.md
-│   └── performace-audit-report.md
+├── {page}/                             → uma nota por aba da planilha
+│   ├── main-tab.md                     → MAIN: status da chave + projetos
+│   ├── tools-tab.md                    → TOOLS: catálogo, execução, agendamentos
+│   └── conf-tab.md                     → CONF: conexão Odoo, chave, log
 │
-├── {instructions}/                   → meta-docs e instruções para o agente
+├── {info}/                             → regras de negócio
+│   ├── odoo-api-key-rotation.md        → chave diária, sinalização vermelha
+│   ├── recording-routing-rule.md       → gravação → projeto
+│   └── odoo-task-roles.md              → QS Principal / Comunicação / LOG
 │
-├── {info}/                           → regras de negócio, glossário, contexto de domínio
-│
-└── {page}/                           → documentação por página / tela / view do produto
+└── {reports}/                          → resultados e planos (carregar sob demanda)
+    ├── implementation-plan.md          → plano em tiers + decisões pendentes
+    ├── dry-refac-duplications-solved.md
+    ├── dry-refac-extraction-pendings.md
+    ├── dry-refac-intentionals-devergencies.md
+    ├── separation-of-concerns-report.md
+    ├── dead-code-audit-report.md
+    ├── dead-code-todos.md
+    ├── dead-code-unused-modules.md
+    └── performace-audit-report.md
 ```
 
-> **[COMO PREENCHER]**
-> Atualize este arquivo sempre que adicionar novas pastas ou notas estruturais ao vault. Adicione módulos de `{page}` e `{info}` conforme o projeto crescer.
+> [!note] Manutenção
+> Atualize este arquivo sempre que adicionar notas estruturais. Nova aba → `{page}`; nova tool → `{general}/tool-*.md`; nova regra → `{info}`.
 
 ---
 
@@ -56,12 +65,11 @@ documentation/
 
 | Prefixo | Propósito | Carregado por sessão? |
 |---------|-----------|----------------------|
-| `{general}` | Overviews, índices, entry points | Sob demanda |
+| `{general}` | Overviews, índices, documentação de tools | Sob demanda |
 | `{instructions}` | Protocolos de audit e contratos de comportamento | **Sim — toda sessão** |
-| `{reports}` | Resultados de execução dos tools | Sob demanda |
-| `{instructions}` | Meta-docs e instruções ao agente | Sob demanda |
+| `{reports}` | Resultados de execução dos audits, planos | Sob demanda |
 | `{info}` | Regras de negócio, glossário, contexto | Sob demanda |
-| `{page}` | Documentação de páginas/telas/views | Sob demanda |
+| `{page}` | Documentação de abas da planilha | Sob demanda |
 
 > [!warning] `{instructions}` sempre lean
 > Notas em `{instructions}` são carregadas em toda sessão — não armazenar resultados aqui. Resultados vão em `{reports}`.
@@ -70,13 +78,11 @@ documentation/
 
 ## Regra de pareamento tools → reports
 
-Cada nota de tool tem um arquivo report correspondente:
-
 | Tool | Report |
 |------|--------|
 | `{instructions}/dry-refactoring.md` | `{reports}/dry-refac-*.md` |
 | `{instructions}/separation-of-concerns.md` | `{reports}/separation-of-concerns-report.md` |
-| `{instructions}/dead-code-audit.md` | `{reports}/dead-code-audit-report.md` + `dead-code-todos.md` |
+| `{instructions}/dead-code-audit.md` | `{reports}/dead-code-audit-report.md` + `dead-code-todos.md` + `dead-code-unused-modules.md` |
 | `{instructions}/performance-audit.md` | `{reports}/performace-audit-report.md` |
 
 ---
@@ -85,16 +91,16 @@ Cada nota de tool tem um arquivo report correspondente:
 
 | Tipo de conteúdo | Pasta |
 |------------------|-------|
-| Nova página / tela / view | `{page}/[nome].md` |
+| Nova aba da planilha | `{page}/[aba]-tab.md` |
+| Nova tool do script | `{general}/tool-[nome].md` |
 | Nova regra de negócio | `{info}/[nome].md` |
-| Novo protocolo de audit | `{instructions}/[nome].md` + criar par em `{reports}/` |
-| Resultado de audit | `{reports}/[tool-name]-report.md` |
-| Overview de módulo | `{general}/[modulo].md` |
-| Instrução ao agente | `{instructions}/[nome].md` |
+| Novo protocolo de audit | `{instructions}/[nome].md` + par em `{reports}/` |
+| Resultado de audit / plano | `{reports}/[nome]-report.md` |
 
 ---
 
 ## Relacionado
 
+- [[project-overview]] — entry point do projeto
 - [[ai-best-practices]] — contrato de comportamento do agente
 - [[coding-conventions]] — padrões de código do projeto

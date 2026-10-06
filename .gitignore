@@ -1,0 +1,7 @@
+# Segredos locais (chave API Odoo de produção) — nunca versionar
+.env
+.env.*
+!.env.example
+
+# clasp (não usado, prevenção)
+.clasprc.json

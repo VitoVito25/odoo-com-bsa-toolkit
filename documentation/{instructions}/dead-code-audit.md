@@ -1,6 +1,6 @@
 ---
-title: Dead Code Audit — [NOME DO PROJETO]
-date: YYYY-MM-DD
+title: Dead Code Audit — Odoo BSA Toolkit
+date: 2026-10-06
 tags:
   - instructions
   - audit
@@ -45,14 +45,17 @@ Funções exportadas que não aparecem em nenhuma chamada fora do próprio arqui
 ### Importações não utilizadas
 `import X from Y` onde `X` nunca aparece no corpo do arquivo.
 
-### State que nunca muda ou nunca é lido
-`useState` onde o setter nunca é chamado, ou onde o valor nunca é consumido.
+### Properties e gatilhos órfãos
+Chaves em `PropertiesService` nunca lidas; gatilhos (`ScriptApp.getProjectTriggers()`) apontando para função inexistente ou tool removida do `ToolRegistry`.
+
+> [!warning] Escopo global do Apps Script
+> Não há `import`. Função "não usada" pode ser chamada por menu, gatilho, botão desenhado ou `google.script.run`. Buscar o nome em todo `apps-script/`, em `appsscript.json` e perguntar sobre botões antes de marcar como morta.
 
 ### Código comentado sem explicação
 Blocos de código comentados sem contexto de *por que* foram comentados. Exceção: TODOs com contexto claro.
 
-### Dependências não utilizadas
-Pacotes em `package.json` / `requirements.txt` / `go.mod` que não aparecem no código ativo.
+### Escopos e bibliotecas não utilizados
+`oauthScopes` / `dependencies.libraries` em `appsscript.json` que nenhum código usa.
 
 ---
 

@@ -1,6 +1,6 @@
 ---
 title: Dead Code — Componentes e Módulos Não Utilizados
-date: YYYY-MM-DD
+date: 2026-10-06
 tags:
   - reports
   - dead-code

@@ -1,6 +1,6 @@
 ---
-title: DRY Refactoring — [NOME DO PROJETO]
-date: YYYY-MM-DD
+title: DRY Refactoring — Odoo BSA Toolkit
+date: 2026-10-06
 tags:
   - instructions
   - refactoring
@@ -24,20 +24,20 @@ aliases:
 
 ---
 
-## Estrutura atual — atualizada em YYYY-MM-DD
+## Estrutura atual — atualizada em 2026-10-06
 
 > **[COMO PREENCHER]**
 > Documente aqui a estrutura atual de utils, helpers e componentes compartilhados do projeto.
 > Atualize esta seção sempre que uma extração for concluída.
-> Use o formato abaixo como guia — adapte para a estrutura de pastas real do projeto.
-> Marque arquivos removidos com `~~nome.ts~~` e a data de remoção.
+> Use o formato abaixo como guia. Código ainda não criado — estrutura alvo em [[implementation-plan]] (Tier 3).
+> Marque arquivos removidos com `~~Nome.gs~~` e a data de remoção.
 
 ```
-[RAIZ DO PROJETO]/
-├── [pasta de componentes compartilhados]/
+apps-script/
+├── sheets/
 │   ├── [ComponenteA].tsx          ← criado YYYY-MM-DD — [propósito]
 │   └── [ComponenteB].tsx          ← criado YYYY-MM-DD — [propósito]
-├── [pasta de utils]/
+├── services/
 │   ├── [dominio]Utils.ts          ← criado YYYY-MM-DD — [lista de exports]
 │   └── [outrodominio]Utils.ts     ← criado YYYY-MM-DD — [lista de exports]
 ```
@@ -86,4 +86,4 @@ Não execute nada sem aprovação.
 
 ---
 
-Ver também: [[dead-code-audit]] | [[coding-conventions]] | [[project-structure]]
+Ver também: [[dead-code-audit]] | [[coding-conventions]] | [[project-overview]]

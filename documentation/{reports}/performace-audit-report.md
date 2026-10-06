@@ -1,6 +1,6 @@
 ---
-title: Performance Audit — Resultados de Audit — [NOME DO PROJETO]
-date: YYYY-MM-DD
+title: Performance Audit — Resultados de Audit — Odoo BSA Toolkit
+date: 2026-10-06
 tags:
   - report
   - performance
@@ -37,4 +37,4 @@ aliases:
 
 ---
 
-Ver também: [[performance-audit]] | [[dry-refactoring-report]] | [[separation-of-concerns-report]]
+Ver também: [[performance-audit]] | [[dry-refac-duplications-solved]] | [[separation-of-concerns-report]]

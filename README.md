@@ -1,34 +1,37 @@
-# Vibcode Documentation Kit
+# Odoo BSA Toolkit
 
-Kit de documentação para projetos de vibe coding — estrutura pronta de vault Obsidian + protocolos de sessão para agentes de IA.
+Kit de ferramentas para BSA da Odoo: uma Google Sheet com Apps Script vinculado que automatiza tarefas repetitivas entre Google Drive/Meet e as tarefas de projeto no odoo.com (produção).
 
-## Intuito
+## Abas da planilha
 
-Vibe coding sem documentação estruturada gera retrabalho: o agente esquece convenções, duplica código, ignora padrões arquiteturais. Este kit resolve isso fornecendo um vault pré-montado que o agente lê no início de cada sessão, garantindo consistência sem depender da memória da conversa anterior.
+| Aba | Para que serve |
+|-----|----------------|
+| `MAIN` | Mostra a data da última atualização da chave API (fica vermelha se for anterior a hoje). Também guarda o cadastro de projetos: nome, nome da reunião (texto exato buscado no título do Meet), pasta de gravações, tarefa QS principal, tarefa de comunicação e tarefa de LOG. |
+| `TOOLS` | Catálogo de tools. Cada tool pode ser executada na hora ou agendada por um dropdown (Manual, A cada hora, Diário 08h etc.). |
+| `CONF` | Conexão com o Odoo e chave API diária (colada na célula), teste de conexão, parâmetros das tools (ID da pasta de origem das gravações, e-mail opcional) e log de todas as execuções. |
 
-## O que está incluído
+## Tools
 
-```
-documentation/
-├── {instructions}/   → protocolos carregados em toda sessão (convenções, DRY, SoC, dead code, performance)
-├── {reports}/        → resultados de audits gerados pelo agente
-└── {general}/        → mapa do vault e entry points
-```
+- **Organizar gravações Meet**: move as pastas de reunião da pasta de origem para a pasta de cada projeto. Hoje a versão em uso é a legada, `organizador-videos.gs`, com mapeamento hardcoded. A migração para ler os projetos da aba MAIN está planejada.
 
-- **`NOVOCLAUDE.md`** — protocolo de início de sessão: define a ordem de leitura dos arquivos e as regras permanentes de comportamento do agente
-- **`PROMPT INICIAL.md`** — executado uma vez para substituir todos os placeholders dos templates pelo contexto real do projeto
-
-## Como usar
-
-1. Clone o repositório no projeto alvo
-2. Execute `PROMPT INICIAL.md` fornecendo nome do projeto, stack, estrutura de pastas e padrão arquitetural
-3. Cole o conteúdo de `NOVOCLAUDE.md` como contexto inicial de cada nova sessão com o agente
-4. O agente lê `documentation/{instructions}/` antes de qualquer tarefa e salva resultados em `{reports}/`
-
-## Estrutura de sessão do agente
+## Estrutura do repositório
 
 ```
-ENTENDER → ESTRUTURAR → APRESENTAR → EXECUTAR → DOCUMENTAR
+apps-script/          → código do Apps Script (planejado), copiado manualmente para o editor
+organizador-videos.gs → script legado (vai para legacy/)
+documentation/        → vault Obsidian: specs das abas, regras de negócio, plano, convenções
+.env.example          → modelo de credenciais locais (copiar para .env, que é ignorado pelo git)
+CLAUDE.md             → protocolo de sessão do agente de IA
 ```
 
-Cada sessão termina com o vault atualizado — próxima sessão começa com contexto completo.
+## Documentação
+
+Comece por `documentation/{general}/project-overview.md`. O plano de execução está em `documentation/{reports}/implementation-plan.md`. Para instalar ou atualizar o código no editor, veja `documentation/{general}/deploy-apps-script.md`.
+
+## Uso diário
+
+1. Gere uma nova chave API no odoo.com.
+2. Cole a chave em `CONF!B5`. A data é atualizada e a conexão é testada automaticamente.
+3. Confira se `MAIN` ficou verde.
+
+> Não compartilhe a planilha: a chave fica visível na célula e no histórico de versões.

@@ -1,6 +1,6 @@
 ---
 title: DRY — Divergências Intencionais
-date: YYYY-MM-DD
+date: 2026-10-06
 tags:
   - reports
   - dry

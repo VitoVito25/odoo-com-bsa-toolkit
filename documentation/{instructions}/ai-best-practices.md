@@ -1,6 +1,6 @@
 ---
 title: AI Best Practices — Comportamento do Agente
-date: YYYY-MM-DD
+date: 2026-10-06
 tags:
   - instructions
   - claude
@@ -16,15 +16,6 @@ aliases:
 # AI Best Practices — Comportamento do Agente
 
 > **Para Claude:** Esta nota define o contrato de comportamento para **toda nova sessão**. Leia antes de qualquer ação. Estas regras têm prioridade sobre comportamentos padrão do modelo. São inegociáveis — não há exceções sem aprovação explícita do usuário.
-
----
-
-> **[COMO PREENCHER]**
-> Este arquivo define o contrato de comportamento do agente para o projeto. As seções abaixo contêm regras genéricas que funcionam para qualquer projeto. Ajuste:
-> - **Seção 1:** O caminho já está definido como `documentation/{instructions}/`
-> - **Seção 8:** Menciona Supabase — remova ou adapte para a stack do projeto
-> - **Seção 14:** Caminhos de documentação — adapte para a estrutura de pastas do vault do projeto
-> - **Referências finais:** Atualize os wikilinks para os arquivos reais do vault
 
 ---
 
@@ -50,9 +41,9 @@ Ao receber qualquer demanda de código, antes de montar plano:
 1. Avaliar o pedido do usuário — qual o objetivo real, não só o literal
 2. Ler **toda** a documentação de `documentation/{instructions}/`:
    - [[coding-conventions]] — nomenclatura, estrutura de componente, state management
-   - [[project-structure]] — onde arquivos novos vão, regras por tipo
+   - [[project-overview]] — abas da planilha, camadas do código, tools existentes
    - [[dry-refactoring]] — estrutura atual de utils, divergências intencionais
-   - [[separation-of-concerns]] — padrão container/presentational, pendências
+   - [[separation-of-concerns]] — camadas Main → tools → sheets/services
    - [[dead-code-audit]] — o que já foi identificado como morto
    - [[performance-audit]] — otimizações pendentes e aprovadas
 3. Só então estruturar o plano — **com base nas boas práticas já estabelecidas**, não reinventando
@@ -106,14 +97,11 @@ Cada **tier** = grupo de mudanças por nível de risco/impacto, não por arquivo
 
 **Exemplo de tiers corretos:**
 ```
-Tier 1 — Criar util (src/lib/[nome]Utils.ts) — risco zero, sem dependências
-Tier 2 — Atualizar componentes que consomem o util — risco baixo
-Tier 3 — Atualizar estado global / pages — risco médio
-Tier 4 — Remover código antigo substituído — risco: verificar imports antes
+Tier 1 — Criar service/repo (apps-script/services/[Nome]Service.gs) — risco zero, sem dependências
+Tier 2 — Atualizar tools que consomem o service — risco baixo
+Tier 3 — Alterar estrutura da planilha (abas/colunas) + Constants.gs — risco médio
+Tier 4 — Remover código antigo substituído — risco: buscar referências globais antes (escopo .gs é único)
 ```
-
-> **[COMO PREENCHER]**
-> Os exemplos acima usam `src/lib/` como caminho de utils. Adapte para a estrutura de pastas do projeto.
 
 **Formato de apresentação de tier:**
 ```
@@ -207,13 +195,11 @@ Se um tier causar erros de TS / build failure inesperado:
 
 Em cada decisão técnica, pensar como um sistema de produção de grande escala:
 
-- **Novo componente:** vai precisar suportar múltiplos temas? múltiplos módulos? internacionalização?
-- **Nova função utilitária:** está em `src/lib/`? é genérica o suficiente para ser reutilizada em outro módulo?
-- **Novo estado:** qual o ciclo de vida? quem precisa acessar? vai escalar para Context ou precisa de server state?
-- **Nova query de banco:** tem políticas de acesso adequadas? performance com volume grande? índice necessário?
-
-> **[COMO PREENCHER]**
-> Adapte os bullets acima para a stack do projeto. Ex: se não usa TypeScript, remova a menção a TS. Se usa REST em vez de Supabase, troque "query Supabase" por "endpoint REST".
+- **Nova tool:** registrada em `ToolRegistry`? roda manual **e** agendada (sem `Ui` em modo agendado)? suporta `dryRun`?
+- **Nova coluna/aba:** coordenadas só em `config/Constants.gs`? planilha de outro BSA funciona sem editar código?
+- **Novo dado sensível:** fora de célula sempre que possível (`PropertiesService`)? Exceção aprovada: chave API Odoo em `CONF!B5` ([[conf-tab]])
+- **Nova chamada Odoo:** em lote? trata chave expirada ([[odoo-api-key-rotation]])? cabe na cota de `UrlFetchApp` e no limite de 6 min?
+- **Novo gatilho:** cabe no limite de 20 gatilhos/usuário? frequência mínima necessária?
 
 Propor a versão escalável desde o início, mesmo que a necessidade imediata seja pequena.
 
@@ -234,6 +220,16 @@ Prosseguir?
 
 Aguardar confirmação explícita. "Pode fazer tudo" de uma sessão anterior não autoriza operações destrutivas futuras.
 
+### Odoo é produção
+
+> [!danger] odoo.com = produção
+> - Sem aprovação: só leitura (`authenticate`, `read`, `search_read`, `fields_get`, versão)
+> - Com aprovação explícita **por execução**: qualquer escrita (`create`, `write`, `unlink`, `message_post`)
+> - Credenciais locais do agente: `.env` na raiz (ignorado pelo git). ==Nunca== imprimir, logar, copiar para nota do vault ou commitar o conteúdo do `.env`
+> - Antes de qualquer `git add`, conferir que `.env` não aparece em `git status`
+
+Mover pastas no Google Drive (tools de organização) também é operação real: primeira execução sempre em `dryRun`.
+
 ---
 
 ## 10. Lógica de Negócio Ambígua
@@ -244,10 +240,7 @@ Quando a regra de negócio não está clara na documentação do vault:
 1. Identificar o ponto ambíguo
 2. Formular pergunta direta: `"Quando [condição X], o resultado deve ser [A] ou [B]?"`
 3. Aguardar resposta antes de implementar
-4. Registrar a decisão na nota de regra de negócio relevante
-
-> **[COMO PREENCHER]**
-> Substitua `{info}bussiness-rule/` pelo caminho real onde ficam as regras de negócio no vault do projeto.
+4. Registrar a decisão na nota de regra de negócio relevante em `documentation/{info}/`
 
 ---
 
@@ -281,15 +274,12 @@ Autorização de commit em sessão anterior **não** vale para sessões futuras.
 
 ## 13. Testing Policy
 
-**Mínimo obrigatório:** o projeto compila sem erros.
+**Mínimo obrigatório:**
+1. Sintaxe válida: `node --check` em cada `apps-script/**/*.gs` sem erros (Apps Script não tem build local)
+2. Tool que move/apaga/escreve dados reais: primeira execução com `dryRun: true` e log revisado pelo usuário
+3. Listar ao usuário os arquivos alterados para colar no editor ([[deploy-apps-script]]); após colar, rodar a tool pelo menu e conferir linha no log de `CONF`
 
-> **[COMO PREENCHER]**
-> Defina aqui o mínimo de testes exigido para o projeto. Exemplos:
-> - TypeScript: compile sem erros (`tsc --noEmit`)
-> - Python: `pytest` passa sem falhas
-> - Qualquer stack: `npm run build` / `make` sem erros
->
-> Recomendado para funções com lógica complexa: propor criação de unit test ao final do tier correspondente. Não bloquear aprovação por ausência de test — apenas sinalizar.
+Recomendado para funções puras com lógica de decisão (ex: `findProjectForFolder_`): propor teste Node simples ao final do tier. Não bloquear aprovação por ausência de teste — apenas sinalizar.
 
 ---
 
@@ -299,15 +289,13 @@ Após cada sessão de mudanças, atualizar obrigatoriamente:
 
 | O que mudou | Onde documentar |
 |-------------|-----------------|
-| Nova feature / componente | Nota correspondente no vault |
-| Nova regra de negócio | Pasta de regras de negócio |
-| Decisão arquitetural | Changelog com data |
-| Novo arquivo utilitário | Nota de estrutura do projeto |
-| DRY / extração | `dry-refactoring.md` seção "Estrutura atual" |
-| Dead code removido | `dead-code-audit.md` seção correspondente |
-
-> **[COMO PREENCHER]**
-> Substitua as células da coluna "Onde documentar" pelos caminhos reais do vault do projeto.
+| Nova tool | `{general}/tool-[nome].md` + linha em [[project-overview]] e [[tools-tab]] |
+| Mudança em aba da planilha | `{page}/[aba]-tab.md` |
+| Nova regra de negócio | `{info}/[nome].md` |
+| Decisão arquitetural / progresso do plano | [[implementation-plan]] (decisões + status dos tiers) |
+| Novo service/repo | [[project-overview]] seção Arquitetura + [[dry-refactoring]] "Estrutura atual" |
+| DRY / extração | `{reports}/dry-refac-*.md` |
+| Dead code removido | [[dead-code-audit-report]] |
 
 Seguir todas as convenções OFM da skill `obsidian-documentation`: frontmatter obrigatório, wikilinks, callouts para destaques, tags hierárquicas.
 
@@ -315,7 +303,4 @@ Seguir todas as convenções OFM da skill `obsidian-documentation`: frontmatter 
 
 ## Referências
 
-Ver também: [[coding-conventions]] | [[project-structure]] | [[dry-refactoring]] | [[dead-code-audit]] | [[separation-of-concerns]] | [[performance-audit]]
-
-> **[COMO PREENCHER]**
-> Atualize os wikilinks acima para os nomes reais dos arquivos no vault do projeto.
+Ver também: [[coding-conventions]] | [[project-overview]] | [[dry-refactoring]] | [[dead-code-audit]] | [[separation-of-concerns]] | [[performance-audit]] | [[implementation-plan]]

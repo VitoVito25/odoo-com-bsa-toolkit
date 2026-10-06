@@ -1,125 +1,101 @@
-# Prompt de Inicialização — Vibcode Documentation Kit
+# Odoo BSA Toolkit — Protocolo de Sessão
 
-> **Execute uma vez.** Após a primeira sessão os templates estarão configurados para o projeto e este prompt não deve ser executado novamente.
+## Resumo do Projeto
 
----
+Google Sheet + Apps Script (container-bound) que serve de kit de ferramentas para um BSA da Odoo. A planilha tem três abas. MAIN guarda o status da chave API e o cadastro de projetos (pasta de gravação + tarefas QS, Comunicação e LOG no odoo.com). TOOLS tem o catálogo de tools com execução manual e agendamento. CONF tem a conexão Odoo, a chave API diária e o log de execuções. Primeira tool: organizar gravações do Meet nas pastas dos projetos (legado hardcoded em `organizador-videos.gs`).
 
-## O que este prompt faz
+- **Stack:** Google Apps Script V8 · Google Sheets como UI · DriveApp / MailApp / ScriptApp / PropertiesService · UrlFetchApp → API do odoo.com (produção — só leitura sem aprovação) · deploy por cópia manual no editor
+- **Código:** `apps-script/` (config/, sheets/, services/, tools/) — ainda não criado
+- **Padrão:** camadas Main → tools → sheets (repos) / services
+- **Segredos:** `.env` na raiz (ignorado pelo git) — nunca exibir, logar ou commitar o conteúdo
+- **Entry point da doc:** `documentation/{general}/project-overview.md` · plano: `documentation/{reports}/implementation-plan.md`
 
-Substitui todos os placeholders genéricos dos templates pelo contexto real do projeto:
+## Protocolo de Início de Sessão
 
-- `[NOME DO PROJETO]` → nome real em todos os frontmatters
-- `YYYY-MM-DD` → data atual em todos os arquivos
-- Seções de stack → adaptadas para as tecnologias do projeto
-- Estrutura de pastas → caminhos reais do projeto
-- Blocos `> **[COMO PREENCHER]**` → removidos após cada seção preenchida
+Execute **nesta ordem**, sem pular etapas:
 
-**Arquivos que serão modificados:**
+### 1. Carregar estrutura do vault
+
+Ler `documentation/{general}/vault-structure.md` para mapear pastas, convenções de prefixo e regra de pareamento tools → reports.
+
+### 2. Carregar todas as instruções
+
+Ler **todos** os arquivos em `documentation/{instructions}/`:
+
+- `ai-best-practices.md` — contrato de comportamento, fluxo obrigatório por sessão, regras de comunicação
+- `coding-conventions.md` — nomenclatura, estrutura de arquivo .gs, stack
+- `dry-refactoring.md` — protocolo DRY, estrutura atual de services/repos, divergências intencionais
+- `separation-of-concerns.md` — camadas Main → tools → sheets/services
+- `dead-code-audit.md` — identificação e remoção de código morto
+- `performance-audit.md` — checklist de performance e cotas do Apps Script
+
+> Não pular nenhum arquivo. Cada um contém restrições ativas que afetam o plano.
+
+### 3. Confirmar leitura
+
+Após ler todos os arquivos acima, reportar:
+
 ```
-documentation/{instructions}/ai-best-practices.md
-documentation/{instructions}/coding-conventions.md
-documentation/{instructions}/dry-refactoring.md
-documentation/{instructions}/separation-of-concerns.md
-documentation/{instructions}/dead-code-audit.md
-documentation/{instructions}/performance-audit.md
-documentation/{reports}/separation-of-concerns-report.md
-documentation/{reports}/performace-audit-report.md
+Vault carregado. [N] instruções lidas. Pronto para receber demanda.
 ```
 
----
-
-## Passo 1 — Coletar informações
-
-Preciso de 5 informações antes de começar:
-
-**1. Nome do projeto**
-Usado em todos os frontmatters como título.
-Ex: `"Bloxslab"`, `"Dashboard Financeiro"`, `"Portal RH"`
-
-**2. Resumo do projeto**
-2-4 frases descrevendo o que o projeto faz, para quem, e qual o problema que resolve.
-Ex: `"Plataforma de gestão de times para pequenas empresas. Permite controlar presença, férias e pagamentos em um painel único. Público: RH de empresas com 10-100 funcionários."`
-
-**3. Stack técnica**
-Linguagem, framework principal, state management, test runner, bundler, estilização, componentes base.
-Ex: `"React + TypeScript, Zustand, Vitest, Vite, Tailwind CSS, shadcn/ui"`
-
-**4. Estrutura de pastas**
-Raiz do projeto + caminho dos utils + caminho dos componentes compartilhados.
-Ex: raiz `src/`, utils em `src/lib/`, componentes em `src/components/shared/`
-
-**5. Padrão arquitetural**
-Como o código é organizado.
-Ex: `"container/presentational"`, `"feature-based"`, `"MVC"`, `"clean architecture"`
+Só então aguardar a demanda do usuário.
 
 ---
 
-## Passo 2 — Execução por arquivo
+## Regras Permanentes
 
-### `ai-best-practices.md`
-- Frontmatter `date:` → substituir `YYYY-MM-DD` pela data atual
-- Seção 3 (Granularidade de Aprovação) → adaptar o exemplo de caminho `src/lib/` para o caminho de utils real (info 4)
-- Seção 8 (Escalabilidade) → remover bullets sobre tecnologias não usadas, adaptar para a stack real (info 3)
-- Seção 10 (Lógica de Negócio Ambígua) → substituir `{info}bussiness-rule/` pelo caminho real de regras de negócio no vault
-- Seção 13 (Testing Policy) → substituir placeholder pelo comando de build/test real do projeto (ex: `tsc --noEmit`, `npm run build`, `pytest`)
-- Seção 14 (Documentação) → substituir caminhos genéricos da tabela pelos caminhos reais do vault
-- Referências finais → verificar se wikilinks apontam para os nomes reais dos arquivos no vault
+- Consultar `{instructions}` antes de qualquer estruturação de plano — nunca da memória
+- Relatórios de audit ficam em `{reports}/` — nunca em `{instructions}/`
+- Vault desatualizado = risco de retrabalho — atualizar no Step 5 de cada sessão
+- Ver [[ai-best-practices]] para fluxo completo (ENTENDER → ESTRUTURAR → APRESENTAR → EXECUTAR → DOCUMENTAR)
 
-### `coding-conventions.md`
-- Frontmatter `title:` → substituir `[NOME DO PROJETO]` pelo nome real (info 1)
-- Frontmatter `date:` → substituir `YYYY-MM-DD` pela data atual
-- Seção Nomenclatura → adaptar tabela para a linguagem/framework do projeto (info 3); preencher coluna Exemplo com padrões reais
-- Seção Estrutura de componente → adaptar bloco de código para a linguagem/framework (info 3)
-- Seção State management → adaptar tabela para o state management do projeto (info 3)
-- Seção Performance → adaptar bullets para as otimizações relevantes à stack (info 3)
-- Seção Stack técnica → preencher tabela completa com as decisões tecnológicas reais (info 3)
+### 1. Think Before Coding
+Don't assume. Don't hide confusion. Surface tradeoffs.
 
-### `dry-refactoring.md`
-- Frontmatter `title:` → substituir `[NOME DO PROJETO]` (info 1)
-- Frontmatter `date:` → substituir `YYYY-MM-DD` pela data atual
-- Seção "Estrutura atual" cabeçalho → substituir `YYYY-MM-DD` pela data atual
-- Bloco de estrutura de pastas → substituir `[RAIZ DO PROJETO]`, `[pasta de componentes compartilhados]`, `[pasta de utils]` pelos caminhos reais (info 4)
-- Manter `[ComponenteA].tsx` e `[ComponenteB].tsx` como exemplos de formato — não preencher com componentes reais ainda
+Before implementing:
 
-### `separation-of-concerns.md`
-- Frontmatter `title:` → substituir `[NOME DO PROJETO]` (info 1)
-- Frontmatter `date:` → substituir `YYYY-MM-DD` pela data atual
-- Adaptar terminologia e exemplos para o padrão arquitetural do projeto (info 5)
+State your assumptions explicitly. If uncertain, ask.
+If multiple interpretations exist, present them - don't pick silently.
+If a simpler approach exists, say so. Push back when warranted.
+If something is unclear, stop. Name what's confusing. Ask.
 
-### `dead-code-audit.md`
-- Frontmatter `title:` → substituir `[NOME DO PROJETO]` (info 1)
-- Frontmatter `date:` → substituir `YYYY-MM-DD` pela data atual
+### 2. Simplicity First
+Minimum code that solves the problem. Nothing speculative.
 
-### `performance-audit.md`
-- Frontmatter `title:` → substituir `[NOME DO PROJETO]` (info 1)
-- Frontmatter `date:` → substituir `YYYY-MM-DD` pela data atual
-- Seções de checklist → remover ou substituir categorias que não se aplicam à stack; adicionar categorias específicas da stack (info 3)
+No features beyond what was asked.
+No abstractions for single-use code.
+No "flexibility" or "configurability" that wasn't requested.
+No error handling for impossible scenarios.
+If you write 200 lines and it could be 50, rewrite it.
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
 
-### `separation-of-concerns-report.md`
-- Frontmatter `title:` → substituir `[NOME DO PROJETO]` (info 1)
+### 3. Surgical Changes
+Touch only what you must. Clean up only your own mess.
 
-### `performace-audit-report.md`
-- Frontmatter `title:` → substituir `[NOME DO PROJETO]` (info 1)
+When editing existing code:
 
----
+Don't "improve" adjacent code, comments, or formatting.
+Don't refactor things that aren't broken.
+Match existing style, even if you'd do it differently.
+If you notice unrelated dead code, mention it - don't delete it.
+When your changes create orphans:
 
-## Passo 3 — Limpeza
+Remove imports/variables/functions that YOUR changes made unused.
+Don't remove pre-existing dead code unless asked.
+The test: Every changed line should trace directly to the user's request.
 
-Após preencher cada seção, remover o bloco `> **[COMO PREENCHER]** ...` correspondente.
+### 4. Goal-Driven Execution
+Define success criteria. Loop until verified.
 
-Não remover blocos de instrução de seções que **não foram preenchidas** — eles sinalizam trabalho pendente para o usuário.
+Transform tasks into verifiable goals:
 
----
+"Add validation" → "Write tests for invalid inputs, then make them pass"
+"Fix the bug" → "Write a test that reproduces it, then make it pass"
+"Refactor X" → "Ensure tests pass before and after"
+For multi-step tasks, state a brief plan:
 
-## Passo 4 — Verificação final
-
-Confirmar que nenhum destes itens permanece nos arquivos preenchidos:
-
-- [ ] `[NOME DO PROJETO]` em qualquer frontmatter `title:`
-- [ ] `YYYY-MM-DD` em qualquer frontmatter `date:` ou corpo de arquivo
-- [ ] `[RAIZ DO PROJETO]` em `dry-refactoring.md`
-- [ ] `[pasta de componentes compartilhados]` em `dry-refactoring.md`
-- [ ] `[pasta de utils]` em `dry-refactoring.md`
-- [ ] Linhas `[ex: ...]` na tabela de Stack técnica de `coding-conventions.md`
-- [ ] Blocos `> **[COMO PREENCHER]**` nas seções que foram preenchidas
-
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.

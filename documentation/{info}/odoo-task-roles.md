@@ -26,10 +26,13 @@ Separar LOG da comunicação evita poluir o histórico com o cliente com mensage
 - Campo vazio → tool que precisa daquela tarefa pula o projeto e loga `⚠️ sem tarefa de LOG`.
 
 ## Exemplos
-URL colada: `https://www.odoo.com/odoo/project/123/tasks/456789` → script extrai ID `456789` (último número da URL). Formato legado `.../web#id=456789&model=project.task` também suportado.
+URL colada: `https://www.odoo.com/odoo/project/123/tasks/456789` → script extrai ID `456789` (número depois de `/tasks/`). Formato legado `.../web#id=456789&model=project.task` também suportado.
+
+## Preenchimento automático
+A sincronização ([[project-sync-rule]]) preenche `Tarefa QS Principal` (tarefa principal do projeto QS) e `Tarefa de Comunicação` (subtarefa cujo nome contém "comunica") quando vazias. `Tarefa de LOG` continua manual.
 
 ## Impacto no código
-`apps-script/sheets/ProjectsRepo.gs` → `parseTaskId_(url)` (planejado).
+`apps-script/sheets/ProjectsRepo.gs` → `parseTaskId_(url)` — aceita `/tasks/<id>`, `project.task/<id>`, `#id=<id>` ou número puro.
 
 ## Relacionado
 - [[main-tab]]

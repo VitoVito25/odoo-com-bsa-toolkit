@@ -2,9 +2,9 @@
 
 ## Resumo do Projeto
 
-Google Sheet + Apps Script (container-bound) que serve de kit de ferramentas para um BSA da Odoo. A planilha tem três abas. MAIN guarda o status da chave API e o cadastro de projetos (pasta de gravação + tarefas QS, Comunicação e LOG no odoo.com). TOOLS tem o catálogo de tools com execução manual e agendamento. CONF tem a conexão Odoo, a chave API diária e o log de execuções. Primeira tool: organizar gravações do Meet nas pastas dos projetos (legado hardcoded em `organizador-videos.gs`).
+Google Sheet + Apps Script (container-bound) que serve de kit de ferramentas para um BSA da Odoo. A planilha tem três abas. MAIN guarda o status da chave API e o cadastro de projetos (pasta de gravação + tarefas QS, Comunicação e LOG no odoo.com). TOOLS tem o catálogo de tools com execução manual e agendamento. CONF tem a conexão Odoo, a chave API diária e o log de execuções. Primeira tool: organizar gravações do Meet nas pastas dos projetos (legado hardcoded em `legacy/organizador-videos.gs`).
 
-- **Stack:** Google Apps Script V8 · Google Sheets como UI · DriveApp / MailApp / ScriptApp / PropertiesService · UrlFetchApp → API do odoo.com (produção — só leitura sem aprovação) · deploy por cópia manual no editor
+- **Stack:** Google Apps Script V8 · Google Sheets como UI · DriveApp / MailApp / ScriptApp / PropertiesService · UrlFetchApp → API do odoo.com (produção — só leitura sem aprovação) · deploy via `npx @google/clasp push` (`.clasp.json`)
 - **Código:** `apps-script/` (config/, sheets/, services/, tools/) — ainda não criado
 - **Padrão:** camadas Main → tools → sheets (repos) / services
 - **Segredos:** `.env` na raiz (ignorado pelo git) — nunca exibir, logar ou commitar o conteúdo

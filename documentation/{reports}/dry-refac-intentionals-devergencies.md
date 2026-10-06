@@ -17,6 +17,10 @@ tags:
 > |------|--------------------|----------------------|
 > | `[nome]` | `[arquivo]` | `[ex: threshold diferente, design distinto, tipo incompatível]` |
 
+| Item | Arquivo divergente | Motivo da divergência |
+|------|--------------------|----------------------|
+| `matchesWholeTerm_` vs `matchesTaskTerm_` | `tools/RecordingOrganizer.gs` / `tools/ProjectSync.gs` | Gravações exigem palavra inteira sempre (títulos livres de reunião); sincronização aceita prefixo para termos ≥ 5 chars ("passaporte" → "Passaportes Poloneses") e ignora `<>`. Unificar quebraria um dos dois casos. |
+
 > [!note] Por que documentar divergências intencionais?
 > Sem este registro, o agente (ou outro dev) pode tentar unificar código que parece duplicado mas tem diferenças sutis e intencionais. O registro protege decisões de design.
 

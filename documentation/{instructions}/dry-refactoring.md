@@ -26,20 +26,27 @@ aliases:
 
 ## Estrutura atual — atualizada em 2026-10-06
 
-> **[COMO PREENCHER]**
-> Documente aqui a estrutura atual de utils, helpers e componentes compartilhados do projeto.
-> Atualize esta seção sempre que uma extração for concluída.
-> Use o formato abaixo como guia. Código ainda não criado — estrutura alvo em [[implementation-plan]] (Tier 3).
-> Marque arquivos removidos com `~~Nome.gs~~` e a data de remoção.
+Atualize esta seção sempre que um service/repo for criado ou uma extração for concluída. Marque arquivos removidos com `~~Nome.gs~~` e a data de remoção.
 
 ```
 apps-script/
+├── config/Constants.gs         ← criado 2026-10-06 — coordenadas de abas/linhas/colunas, TOOL_ID, ORIGIN, STATUS
 ├── sheets/
-│   ├── [ComponenteA].tsx          ← criado YYYY-MM-DD — [propósito]
-│   └── [ComponenteB].tsx          ← criado YYYY-MM-DD — [propósito]
+│   ├── ProjectsRepo.gs         ← criado 2026-10-06 — listActive, readAll, write, setSyncInfo, parseDriveFolderId_, parseTaskId_, parseProjectId_
+│   ├── ConfRepo.gs             ← criado 2026-10-06 — ConfRepo.get/setKeyDate/setConnection/uncheckTest
+│   ├── LogRepo.gs              ← criado 2026-10-06 — LogRepo.append
+│   └── ToolsRepo.gs            ← criado 2026-10-06 — ToolsRepo.ensureRows/idAtRow/updateResult/uncheckRun
 ├── services/
-│   ├── [dominio]Utils.ts          ← criado YYYY-MM-DD — [lista de exports]
-│   └── [outrodominio]Utils.ts     ← criado YYYY-MM-DD — [lista de exports]
+│   ├── DriveService.gs         ← criado 2026-10-06 — listSubfolders, moveFolder
+│   ├── MailService.gs          ← criado 2026-10-06 — sendReport
+│   ├── OdooClient.gs           ← criado 2026-10-06 — call, searchRead, currentUser, taskUrl, isToday_
+│   └── TriggerService.gs       ← criado 2026-10-06 — syncTool, syncAll, refreshStatuses, nextRun_
+└── tools/
+    ├── ToolRegistry.gs         ← criado 2026-10-06 — getToolRegistry_
+    ├── runTool.gs              ← criado 2026-10-06 — runTool (lock + log + resultado + e-mail + refresh agendamentos)
+    ├── ProjectSync.gs          ← criado 2026-10-06 — runProjectSync_, planProjectSync_, findRowForTask_
+    └── RecordingOrganizer.gs   ← criado 2026-10-06 — runRecordingOrganizer_, findProjectForFolder_, normalizeText_
+legacy/organizador-videos.gs    ← referência, não colar no editor
 ```
 
 **Instruções de preenchimento:**

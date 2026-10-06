@@ -277,7 +277,7 @@ Autorização de commit em sessão anterior **não** vale para sessões futuras.
 **Mínimo obrigatório:**
 1. Sintaxe válida: `node --check` em cada `apps-script/**/*.gs` sem erros (Apps Script não tem build local)
 2. Tool que move/apaga/escreve dados reais: primeira execução com `dryRun: true` e log revisado pelo usuário
-3. Listar ao usuário os arquivos alterados para colar no editor ([[deploy-apps-script]]); após colar, rodar a tool pelo menu e conferir linha no log de `CONF`
+3. `npx @google/clasp push --force` ([[deploy-apps-script]]); depois rodar a tool pelo menu e conferir linha no log de `CONF`
 
 Recomendado para funções puras com lógica de decisão (ex: `findProjectForFolder_`): propor teste Node simples ao final do tier. Não bloquear aprovação por ausência de teste — apenas sinalizar.
 

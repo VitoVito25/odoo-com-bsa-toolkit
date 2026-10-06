@@ -91,11 +91,40 @@ Antes de criar formato novo na planilha (cor, emoji de status, dropdown, checkbo
 
 Padrões estabelecidos:
 - Status: `✅` sucesso · `⚠️` pendência/aviso · `❌` erro · `⏸` manual
-- Cabeçalho: negrito, fundo cinza claro, linha congelada, cell note explicativa
-- Vermelho (`#F4C7C3`) = ação necessária do usuário
+- Cabeçalho de tabela: roxo Odoo, texto branco negrito, linha congelada, cell note explicativa
+- Vermelho (`#F4C7C3`, texto `#990000`) = ação necessária · verde (`#D9EAD3`, texto `#276B33`) = ok · amarelo (`#FFF2CC`) = divergente
+
+### Identidade visual Odoo
+
+| Uso | Cor |
+|-----|-----|
+| Primária — banner da MAIN, cabeçalhos de tabela, faixa de cabeçalho | roxo `#714B67` |
+| Secundária — seções da CONF, rótulos de ação | teal `#017E84` |
+| Fundo de blocos de status / células editáveis da CONF | lilás claro `#F4EEF2` |
+| Faixa alternada (banding) | `#F8F6F8` / branco |
+| Texto | `#374151` |
+
+- Fonte Roboto em todas as abas; linhas de grade ocultas
+- Abas: MAIN roxo, TOOLS teal, CONF cinza
+- Tabelas usam *banding* (Formatar → Cores alternadas); linhas novas do log herdam o banding (`LogRepo` limpa o fundo)
+- Linha inserida via `insertRowsAfter(cabeçalho)` herda o estilo do cabeçalho — sempre resetar fonte (cor/peso) e fundo
+- Células de dados com `CLIP` (links não transbordam); log com altura de linha fixa
 
 > [!warning] Nunca criar variante inline silenciosa
 > Cor ou emoji diferente do padrão quebra a leitura rápida do status. Confirmar antes de divergir.
+
+---
+
+## Fórmulas e locale
+
+Planilha em ==locale `pt_BR`== e fuso `America/Sao_Paulo`.
+- Fórmulas escritas via API/MCP (valores, formatação condicional, validação): nomes em português e separador `;` — `=SE(OU(A1="";A1<HOJE());...)`. Em inglês com `,` retorna `#ERROR!` / `Invalid ConditionValue`
+- Fórmulas via Apps Script `setFormula`: verificar no primeiro uso qual sintaxe o locale aceita e registrar aqui
+
+## Armadilhas da API Odoo JSON-2
+
+- `search_read` com `limit: 0` devolve ==zero registros== (não "sem limite"). Omitir `limit` para trazer tudo — `OdooClient.searchRead` já faz isso
+- Erros vêm como JSON `{name, message}` com HTTP ≠ 200
 
 ---
 
@@ -116,7 +145,7 @@ Padrões estabelecidos:
 | Interface | Google Sheets (abas MAIN / TOOLS / CONF), menu customizado `BSA Toolkit` |
 | Serviços Google | `SpreadsheetApp`, `DriveApp`, `MailApp`, `ScriptApp` (gatilhos), `PropertiesService`, `CacheService` |
 | Integração Odoo | `UrlFetchApp` → API JSON-2 do odoo.com (`POST /json/2/<model>/<method>`, `Authorization: bearer <chave>`, body = kwargs nomeados). Produção |
-| Deploy | Cópia manual de `apps-script/` para o editor — [[deploy-apps-script]] |
+| Deploy | `npx @google/clasp push --force` (script vinculado à planilha) — [[deploy-apps-script]] |
 | Testes | `node --check` (sintaxe) + execução manual com `dryRun` — ver [[ai-best-practices#13. Testing Policy]] |
 | Dependências externas | Nenhuma (sem bibliotecas Apps Script) |
 

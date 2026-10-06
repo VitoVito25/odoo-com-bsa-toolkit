@@ -54,13 +54,13 @@ Uma pasta de reunião dentro da ==pasta de origem== (ID em [[conf-tab]]) pertenc
 - Projeto casado sem `Pasta Gravação` → não move; log `⚠️ projeto sem pasta`.
 - Pasta de destino inválida/sem permissão → log `❌` para aquela pasta, segue para a próxima.
 - ID de origem vazio/inválido em CONF → tool aborta com `❌ pasta de origem não configurada`.
-- Mesmo termo cadastrado em dois projetos → todas as reuniões com ele ficam ambíguas; `ProjectsRepo` loga `⚠️ termo duplicado` ao ler MAIN.
+- Mesmo termo cadastrado em dois projetos → todas as reuniões com ele ficam ambíguas; a tool registra `⚠️ TERMO DUPLICADO` no topo do detalhe do log (`findDuplicateTerms_`).
 
 ## Impacto no código
-- Legado: `organizador-videos.gs:68-69`
-- Novo (planejado): `apps-script/tools/RecordingOrganizer.gs`
+- Legado: `legacy/organizador-videos.gs:68-69`
+- Novo: `apps-script/tools/RecordingOrganizer.gs`
   - `normalizeText_(s)` — passo 1
-  - `findProjectForFolder_(folderName, projects)` → `{status: 'match'|'none'|'ambiguous', project?, candidates?}` — passos 3–4, função pura (testável em Node)
+  - `findProjectForFolder_(folderName, projects)` → `{status: 'match'|'none'|'ambiguous', project?, candidates?}` — passos 3–4, função pura. Validada em Node com os 13 cenários da tabela acima (2026-10-06)
 
 ## Relacionado
 - [[tool-organizador-gravacoes]]

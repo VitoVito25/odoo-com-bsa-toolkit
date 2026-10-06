@@ -16,8 +16,8 @@ aliases:
 ## O que faz
 Varre a ==pasta de origem== (ID em `CONF!B11`) e move cada pasta de reunião para a `Pasta Gravação` do projeto correspondente. Regra de associação em [[recording-routing-rule]].
 
-## Estado atual — legado
-Arquivo: `organizador-videos.gs` (raiz do repo, ==não versionado ainda== — untracked). Função única `organizarGravacoesMeet()` colada no editor do Apps Script.
+## Legado
+Arquivo: `legacy/organizador-videos.gs` (referência — não colar no editor novo). Função única `organizarGravacoesMeet()`.
 
 ### Análise do legado
 
@@ -33,8 +33,8 @@ Arquivo: `organizador-videos.gs` (raiz do repo, ==não versionado ainda== — un
 | 8 | Log só por e-mail | `:98-111` | Log em [[conf-tab]]; e-mail opcional (`CONF!B12`) |
 | 9 | Pasta de origem não encontrada → só `console.log` | `:115` | `❌` no log + linha em [[tools-tab]] |
 
-## Estado alvo
-`apps-script/tools/RecordingOrganizer.gs` — `runRecordingOrganizer(ctx)`:
+## Implementação atual (2026-10-06)
+`apps-script/tools/RecordingOrganizer.gs` — `runRecordingOrganizer_(ctx)`, chamada via `runTool()`:
 1. `ConfRepo.get()` → `sourceFolderId`, `sendEmail`
 2. `ProjectsRepo.listActive()` → projetos com `Nome Reunião` e `Pasta Gravação`
 3. `DriveService.listSubfolders(sourceFolderId)`
@@ -42,7 +42,13 @@ Arquivo: `organizador-videos.gs` (raiz do repo, ==não versionado ainda== — un
 5. 1 match → `DriveService.moveFolder()` (try/catch por item; `ctx.dryRun` só loga)
 6. Resultado → `LogRepo.append()` + linha em [[tools-tab]]; se `sendEmail` → `MailApp`
 
-Agendamento sugerido: `A cada hora` via [[tools-tab]].
+Como rodar:
+- Menu `BSA Toolkit → Organizar gravações — simulação` → `dryRun`, só loga `🔎 MOVERIA`
+- Menu `BSA Toolkit → Organizar gravações — executar` → pede confirmação e move
+- Checkbox `Executar` na linha `ORGANIZAR_GRAVACOES` da aba TOOLS → move ==sem confirmação==
+- `LockService` impede duas execuções simultâneas
+
+Agendamento sugerido (Tier 6): `A cada hora` via [[tools-tab]].
 
 ## Relacionado
 - [[recording-routing-rule]]

@@ -25,6 +25,8 @@ BSA (Business Solution Analyst) da Odoo que conduz vários projetos de implanta�
 
 ## Abas da planilha
 
+Planilha: `BSA Toolkit` (raiz do Drive) — ID `1aZaUFqrxflo6lRWzY7mWOo3j8KDrkBCVUTl4TSpBd0w` · [abrir](https://docs.google.com/spreadsheets/d/1aZaUFqrxflo6lRWzY7mWOo3j8KDrkBCVUTl4TSpBd0w/edit)
+
 | Aba | Função | Nota |
 |-----|--------|------|
 | `MAIN` | Status da chave API + cadastro de projetos | [[main-tab]] |
@@ -52,9 +54,10 @@ Detalhes do padrão em [[separation-of-concerns]]. Convenções em [[coding-conv
 
 | Tool | Status | Nota |
 |------|--------|------|
-| Organizar gravações Meet | Legado hardcoded → migrar | [[tool-organizador-gravacoes]] |
-| Testar conexão Odoo | Planejado | [[conf-tab]] |
-| Sincronizar agendamentos | Planejado | [[tools-tab]] |
+| Organizar gravações Meet | Funcionando — aguarda migração de conta para uso real | [[tool-organizador-gravacoes]] |
+| Sincronizar projetos do Odoo | Funcionando | [[project-sync-rule]] |
+| Testar conexão Odoo | Funcionando | [[conf-tab]] |
+| Agendamentos (TOOLS) | Funcionando | [[tools-tab]] |
 
 ## Regras de negócio
 - [[odoo-api-key-rotation]] — chave diária, sinalização em vermelho

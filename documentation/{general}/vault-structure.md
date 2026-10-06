@@ -42,7 +42,8 @@ documentation/
 ├── {info}/                             → regras de negócio
 │   ├── odoo-api-key-rotation.md        → chave diária, sinalização vermelha
 │   ├── recording-routing-rule.md       → gravação → projeto
-│   └── odoo-task-roles.md              → QS Principal / Comunicação / LOG
+│   ├── odoo-task-roles.md              → QS Principal / Comunicação / LOG
+│   └── project-sync-rule.md            → sincronização de projetos com o Odoo
 │
 └── {reports}/                          → resultados e planos (carregar sob demanda)
     ├── implementation-plan.md          → plano em tiers + decisões pendentes

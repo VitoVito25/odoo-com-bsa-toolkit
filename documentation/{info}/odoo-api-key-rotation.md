@@ -32,7 +32,7 @@ Política do odoo.com para chaves de API dos usuários internos: expiração cur
 - Chave em `CONF!B5` (colada pelo usuário); data em `CONF!B6` (escrita pelo script ao editar `B5`) — [[conf-tab]]
 - Testes locais do agente: chave em `.env` (ignorado pelo git), independente da planilha
 - Checagem visual: formatação condicional em [[main-tab]]
-- Checagem em código: `OdooClient.assertKeyFresh()` em `apps-script/services/OdooClient.gs` (planejado)
+- Checagem em código: `OdooClient.assertKeyFresh_()` + `isToday_()` em `apps-script/services/OdooClient.gs` (fuso do script)
 
 ## Relacionado
 - [[conf-tab]]

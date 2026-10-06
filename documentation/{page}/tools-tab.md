@@ -12,7 +12,7 @@ aliases:
 # Aba TOOLS
 
 ## O que é
-Catálogo de todas as tools do script. Permite ==executar manualmente== e ==configurar agendamento== de forma amigável, sem abrir o editor do Apps Script.
+Catálogo de todas as tools do script, com ==execução manual== e ==agendamento por dropdown==.
 
 ## Para quem
 BSA dono da planilha.
@@ -21,47 +21,44 @@ BSA dono da planilha.
 
 | Coluna | Campo | Editável? | Descrição |
 |--------|-------|-----------|-----------|
-| A | `ID` | não | Chave estável da tool (ex: `ORGANIZAR_GRAVACOES`). Liga a linha ao registro em `apps-script/tools/ToolRegistry.gs` |
+| A | `ID` | não | Chave estável (`ORGANIZAR_GRAVACOES`, `SINCRONIZAR_PROJETOS`) — liga a linha ao `ToolRegistry.gs` |
 | B | `Tool` | não | Nome amigável |
-| C | `Descrição` | não | O que faz, em 1 frase |
-| D | `Executar` | sim (checkbox) | Marcar = roda agora; script desmarca ao terminar |
+| C | `Descrição` | não | O que faz |
+| D | `Executar` | sim (checkbox) | Marcar = roda agora (==real, sem confirmação==); script desmarca |
 | E | `Agendamento` | sim (dropdown) | `Manual` · `A cada hora` · `A cada 6h` · `Diário 08h` · `Diário 18h` · `Semanal (seg 08h)` |
-| F | `Status agendamento` | não | `✅ Ativo` · `⏸ Manual` · `⚠️ Divergente` (gatilho real ≠ planilha) |
-| G | `Próxima execução (aprox.)` | não | Calculada a partir do agendamento |
-| H | `Última execução` | não | Data/hora da última execução |
-| I | `Último resultado` | não | `✅ OK` / `⚠️ Pendências` / `❌ Erro` + resumo curto |
+| F | `Status agendamento` | não | `✅ Ativo` (verde) · `⏸ Manual` · `⚠️ Divergente — use Sincronizar agendamentos` (amarelo) |
+| G | `Próxima execução (aprox.)` | não | `~ dd/MM HH:mm` |
+| H | `Última execução` | não | Data/hora |
+| I | `Último resultado` | não | `✅`/`⚠️`/`❌` + resumo (`❌` em vermelho) |
 
-Colunas A–C, F–I protegidas (aviso ao editar).
-
-## Agendamentos amigáveis — como funciona
+## Agendamentos — implementação (2026-10-06)
 
 > [!info] Limitação da API
-> `ScriptApp.getProjectTriggers()` retorna função, tipo e ID do gatilho, mas ==não retorna a frequência/horário==. Por isso a planilha é a fonte da verdade e o script reconcilia.
+> `ScriptApp.getProjectTriggers()` não expõe frequência/horário. A planilha é a fonte da verdade; `TriggerService` reconcilia.
 
-Fluxo:
-1. Usuário escolhe valor no dropdown `Agendamento`
-2. Gatilho instalável `onEdit` chama `TriggerService.syncTool(id)`:
-   - apaga gatilhos existentes daquela tool
-   - cria novo `ScriptApp.newTrigger(...).timeBased()` conforme o dropdown
-   - guarda o `triggerId` em `PropertiesService` (chave `trigger:<ID>`)
-3. Menu `BSA Toolkit → Sincronizar agendamentos` reconcilia tudo e marca `⚠️ Divergente` se algum gatilho sumiu ou foi criado fora da planilha
-4. Toda execução (manual ou agendada) grava `H`, `I` e uma linha no log de [[conf-tab]]
+- Trocar o dropdown → `onEditInstalled` → `TriggerService.syncTool(id, rótulo)`: apaga o gatilho da tool e cria `timeBased()` novo com handler único `runScheduledTool`
+- `ScriptProperties`: `trigger:<id>` = uid · `triggerTool:<uid>` = id · `triggerLabel:<id>` · `triggerCreated:<id>`
+- `runScheduledTool(e)` descobre a tool por `e.triggerUid` → `runTool(id, {origin: Agendado})`
+- `refreshStatuses()` escreve F/G após cada execução, ao abrir a planilha (`onOpenInstalled`) e ao trocar o dropdown
+- Menu `Sincronizar agendamentos` → `syncAll()`: recria gatilhos faltantes/divergentes e apaga órfãos
+- `nextRun_()` (pura): a cada N horas = criação + k×intervalo; diário/semanal = próximo horário fixo
+
+Verificado 2026-10-06: `Diário 18h` → `✅ Ativo` / `~ 06/10 18:00`; de volta para `Manual` → `⏸ Manual`.
 
 > [!warning] Horário aproximado
-> Gatilhos de tempo do Apps Script rodam dentro de uma janela de ~15 min do horário escolhido. Coluna G deixa isso explícito ("~08:00").
+> O Google roda gatilhos de tempo numa janela de ~15 min.
 
-## Execução manual
-- Checkbox `Executar` (gatilho `onEdit` instalável) ou menu `BSA Toolkit → Executar tool…`
-- Desenho/botão clicável: não dá para criar por API — opcional, usuário insere manualmente e atribui a função `runSelectedTool`
+> [!note] Por que antes "não funcionava"
+> Até a Tier 6 só existia o dropdown na planilha — nenhum código lia a coluna; status e próxima execução eram texto fixo.
 
 ## Regras de negócio
-- Tools que usam Odoo verificam [[odoo-api-key-rotation]] antes de rodar; chave vencida → `❌ Erro: chave expirada` sem chamar a API.
-- Tools que escrevem no Odoo (produção) ou movem arquivos têm modo `dryRun`.
+- Tools que usam Odoo verificam [[odoo-api-key-rotation]] antes de rodar; agendamento das 08h falha se a chave do dia ainda não foi colada.
+- Tools que movem arquivos têm modo simulação no menu.
 
 ## Decisões técnicas
-- Registro de tools em código (`ToolRegistry.gs`) e não só na planilha: evita que linha editada aponte para função inexistente. Script recria linhas faltantes no `onOpen`.
-- Gatilho `onEdit` precisa ser ==instalável== (simple trigger não pode criar triggers nem chamar serviços autorizados).
+- Registry em código (`ToolRegistry.gs`); `ensureRows` recria linhas faltantes no setup/abertura.
+- `onEdit` e `onOpen` ==instaláveis== (simple triggers não podem criar/ler gatilhos).
 
 ## Edge cases conhecidos
-- Limite de 20 gatilhos por usuário por script — suficiente para o catálogo planejado.
-- Gatilhos rodam com a conta do dono; se outra pessoa editar a planilha, agendamentos continuam com a conta de quem criou.
+- Limite de 20 gatilhos por usuário por script.
+- Gatilhos rodam com a conta de quem rodou o setup.

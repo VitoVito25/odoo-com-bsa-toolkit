@@ -12,70 +12,59 @@ aliases:
 # Aba CONF
 
 ## O que é
-Configuração da conexão com o Odoo (odoo.com, ==produção==), chave API diária, teste de conexão, parâmetros das tools e ==log de todas as execuções==.
+Conexão com o Odoo (odoo.com, ==produção==), chave API diária, teste de conexão, parâmetros das tools e ==log de todas as execuções==.
 
 ## Para quem
 BSA dono da planilha.
 
 ## Layout
 
-### Bloco Conexão Odoo (`A1:B8`)
+### Bloco Conexão Odoo (`A1:B8`, cabeçalho teal)
 
 | Linha | Rótulo (A) | Valor (B) | Quem edita |
 |-------|-----------|-----------|------------|
-| 1 | **Conexão Odoo** | — | — |
 | 2 | URL Odoo | `https://www.odoo.com` | usuário |
-| 3 | Banco (DB) — opcional | vazio (odoo.com resolve pelo domínio); se preenchido vai no header `X-Odoo-Database` | usuário |
-| 4 | Usuário conectado | `uid` / idioma retornados pelo teste | script |
+| 3 | Banco (DB) — opcional | vazio; se preenchido vai no header `X-Odoo-Database` | usuário |
+| 4 | Usuário conectado | ==nome no Odoo== (ex: `Victor Tomazoni Renaud (vito)`) — usado na saudação da MAIN | script |
 | 5 | Chave API | chave colada diariamente | usuário |
-| 6 | Chave atualizada em | data/hora | ==script== (ao editar `B5`) — lida por [[main-tab]] |
-| 7 | Status conexão | `✅ OK (uid 123)` / `❌ ...` | script |
+| 6 | Chave atualizada em | data/hora | script (ao editar `B5`) |
+| 7 | Status conexão | `✅ OK · uid N · pt_BR` / `❌ ...` | script |
 | 8 | Testar conexão | checkbox | usuário marca → script testa e desmarca |
 
-### Bloco Parâmetros das tools (`A10:B12`)
+### Bloco Parâmetros (`A10:B13`, cabeçalho teal)
 
 | Linha | Rótulo (A) | Valor (B) | Usado por |
 |-------|-----------|-----------|-----------|
-| 10 | **Parâmetros** | — | — |
-| 11 | Pasta origem gravações (ID) | ID da pasta do Drive onde o Meet salva as reuniões | [[tool-organizador-gravacoes]] |
-| 12 | Enviar e-mail de relatório | checkbox (padrão desmarcado) | todas as tools com relatório |
+| 11 | Pasta origem gravações (ID) | ID da pasta onde o Meet salva as reuniões | [[tool-organizador-gravacoes]] |
+| 12 | Enviar e-mail de relatório | checkbox (padrão desmarcado) | todas as tools |
+| 13 | Projeto QS (link) | `https://www.odoo.com/odoo/project/9273/tasks` — `(PS-BR) Quickstart` | [[project-sync-rule]] |
 
-### Bloco Log (cabeçalho em `A14:F14`, dados a partir de `A15`)
+### Bloco Log (cabeçalho `A15:F15`, dados a partir de `A16`)
 
-| Coluna | Campo |
-|--------|-------|
-| A | Data/hora |
-| B | Tool (ID) |
-| C | Origem (`Manual` / `Agendado`) |
-| D | Status (`✅` / `⚠️` / `❌`) |
-| E | Resumo (1 linha) |
-| F | Detalhe (texto completo — ex: lista de pastas movidas) |
+Colunas: Data/hora · Tool (ID) · Origem (`Manual`/`Agendado`) · Status · Resumo · Detalhe. Mais recente no topo; limite 1000 linhas; faixas alternadas.
 
-Linhas novas inseridas ==no topo== (mais recente primeiro). Limite de 1000 linhas; excedente apagado.
+Legibilidade (corrigido 2026-10-06): linha nova é inserida logo abaixo do cabeçalho e ==herdava texto branco== do cabeçalho roxo. `LogRepo.append` agora força texto `#374151`, fundo da faixa, `CLIP` e ==altura fixa de 22 px== (`LOG_ROW_HEIGHT`) — sem isso o Detalhe multilinha esticava a linha. Detalhe completo: clicar na célula e ler na barra de fórmulas.
 
 ## Como funciona — chave API
-1. Usuário gera chave no odoo.com e cola em `B5`
-2. Gatilho `onEdit` instalável detecta edição em `B5` → grava `now()` em `B6` → roda teste de conexão → resultado em `B7` + linha no log
-3. [[main-tab]] fica verde
+1. Usuário cola a chave em `B5`
+2. `onEditInstalled` → `B6 = now()` → teste de conexão → `B4` nome, `B7` status + linha no log
+3. [[main-tab]] fica verde e mostra "Olá, <nome>! 👋"
 
 > [!warning] Risco aceito — chave em célula (decisão 2026-10-06)
-> Usuário optou por célula em vez de `PropertiesService`. Consequências: histórico de versões do Sheets guarda chaves antigas e qualquer pessoa com acesso à planilha vê a chave. Mitigações: ==não compartilhar a planilha==; chave expira em 1 dia; nota no cabeçalho de `B5` lembrando disso.
+> Histórico de versões guarda chaves antigas e quem acessa a planilha vê a chave. ==Não compartilhar a planilha==; chave expira em 1 dia. Agente: nunca ler o range `CONF!B5` pela API (o valor entra no contexto).
 
 ## Como funciona — teste de conexão
-`OdooClient.testConnection()` → `POST {URL}/json/2/res.users/context_get` com header `Authorization: bearer <chave>` → `B7` = `✅ OK` + `B4` = `uid N · pt_BR`, ou `❌ HTTP 401 ...` + linha no log. ==Somente leitura==.
-
-> [!info] API JSON-2 (decisão 2026-10-06)
-> odoo.com roda `saas~19.3` → API JSON-2 disponível. Só a chave autentica — sem login, sem `uid` prévio, sem DB. Verificado com chave real: HTTP 200 em `context_get`.
+`OdooClient.currentUser()` → `context_get` + `res.users.read([uid], ["name"])` via JSON-2. Somente leitura.
 
 ## Regras de negócio
 - [[odoo-api-key-rotation]]
 - [[recording-routing-rule]] — usa `B11`
+- [[project-sync-rule]] — usa `B13`
 
 ## Decisões técnicas
-- Checkbox + `onEdit` instalável em vez de botão desenhado: botões (drawings) não podem ser criados via API/script. Botão desenhado é opcional, inserido à mão (atribuir função `testOdooConnection`).
-- Pasta de origem por ID (decisão 2026-10-06) em vez de busca por nome `Google Meet`.
-- Log na planilha é o registro principal; e-mail opcional via `B12` (decisão 2026-10-06).
+- Checkbox + `onEdit` instalável em vez de botão desenhado (drawings não são criáveis por API).
+- Pasta de origem por ID; log na planilha; e-mail opcional (decisões 2026-10-06).
+- Coordenadas em `Constants.gs`: `CONF_RANGE = B2:B13`, `LOG_HEADER_ROW = 15`.
 
 ## Edge cases conhecidos
-- `B5` editado por colagem com espaço/quebra de linha → script faz `trim()` antes de usar.
 - Execução agendada com chave de ontem → não chama API; log `❌ chave expirada`.

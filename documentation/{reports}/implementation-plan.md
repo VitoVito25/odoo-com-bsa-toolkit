@@ -33,7 +33,8 @@ aliases:
 | D8 | Local da planilha | Raiz do Drive | |
 | D9 | Pasta de origem das gravações | ID em `CONF!B11` (substitui busca por nome `Google Meet`) | |
 | D11 | Fonte da lista de projetos | Projeto QS `(PS-BR) Quickstart` (id 9273) em `CONF!B13`; tarefas principais do usuário | [[project-sync-rule]] |
-| D12 | Conta Google do toolkit | Conta onde estão as gravações (migração = Tier 8) | |
+| D12 | Conta Google do toolkit | PROD na conta Odoo `vito@odoo.com` (onde estão as gravações); ==DEV/origem na conta pessoal== para futuros updates | [[deploy-apps-script]] |
+| D13 | Deploy no PROD | Cópia manual — clasp bloqueado pela TI da Odoo | |
 | D10 | Protocolo API Odoo | ==JSON-2== (`/json/2/<model>/<method>`, `Authorization: bearer`). odoo.com = `saas~19.3`; `context_get` HTTP 200 com chave real | |
 
 ---
@@ -119,7 +120,21 @@ Resultado: `services/TriggerService.gs` + `runScheduledTool` + `onOpenInstalled`
 - MAIN: filtro só `Ativo` (22 de 58 visíveis), reaplicado pelo script
 - MAIN: links cortados na largura da célula
 
-## Tier 8 — Migrar para a conta das gravações ⬜
+## Tier 8 — Migrar para a conta das gravações 🟨 (2026-10-06)
+Feito:
+- Chave apagada do DEV; DEV compartilhado como leitor com `vito@odoo.com`
+- Cópia feita pela conta Odoo → PROD `1BqGcIfE51PbA2eiG41uwU9tC_0hr-IdeXhyIHfOqkqs` (dados, visual, filtro e script vieram juntos). Primeira tentativa saiu pela conta gmail (Chrome com 2 contas) → cópia enviada à lixeira do gmail
+- API do Apps Script ativada em `vito@odoo.com`; `clasp login` ==bloqueado pela TI== → deploy manual no PROD
+- PROD: renomeada "BSA Toolkit"; `CONF!B11` = pasta Meet real `1J8ZTQ9iO_kSYA09albhdH_CLfbWmPlsh`
+
+Pendente:
+- Usuário autorizar o script no PROD (`setup`)
+- Colar chave em `CONF!B5` do PROD; simulação do organizador; revisar; execução real
+- Preencher `Nome Reunião` de projetos vindos da sync (ex: EMOB)
+- Verificar gatilhos do script legado na conta Odoo
+- DEV: agendamentos em `Manual` (log mostra sync "Agendado" às 17:57)
+
+Plano original:
 Decisão do usuário (2026-10-06): toolkit vai para a conta Google onde estão as gravações/pastas dos projetos.
 - Pré-requisitos: conector Google Drive desta sessão na conta nova (ou planilha recriada via Chrome), API do Apps Script ativada nela, `clasp login` com ela
 - Recriar planilha (estrutura + visual) e script (`clasp create-script --parentId` + restaurar manifesto + `push`)

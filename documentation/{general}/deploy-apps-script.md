@@ -12,6 +12,28 @@ aliases:
 
 # Deploy manual do Apps Script
 
+## Ambientes (decisão 2026-10-06)
+
+| | DEV (origem) | PROD |
+|-|--------------|------|
+| Conta Google | `victortomazonir@gmail.com` (pessoal) | `vito@odoo.com` (corporativa) |
+| Planilha | `1aZaUFqrxflo6lRWzY7mWOo3j8KDrkBCVUTl4TSpBd0w` | `1BqGcIfE51PbA2eiG41uwU9tC_0hr-IdeXhyIHfOqkqs` |
+| Script vinculado | `1z0Gy39yf_fZ1GpS6H1h4e-xsTL-Lk5IOhY0O5qnriWxaFqCeseP6eYuS` (`.clasp.json`) | copiado junto com a planilha (ID no editor da cópia) |
+| Deploy | `npx @google/clasp push --force` | ==cópia manual== dos arquivos alterados no editor |
+| Pasta Meet (`CONF!B11`) | `1aYqJa-…` (vazia — teste) | `1J8ZTQ9iO_kSYA09albhdH_CLfbWmPlsh` (real) |
+| Pastas dos projetos | ==inacessíveis== (são da conta Odoo) | acessíveis |
+| Agendamentos | manter `Manual` | conforme uso |
+
+> [!warning] Por que PROD não usa clasp
+> A TI da Odoo bloqueia o app clasp na conta corporativa: "Acesso bloqueado: o admin da sua instituição precisa analisar o app clasp" (`Erro 400: access_not_configured`, 2026-10-06). Não contornar.
+
+### Fluxo de atualização
+1. Alterar código em `apps-script/` → `node --check` → `clasp push` para DEV
+2. Testar no DEV (menus, simulação, log). Organizador no DEV só valida lógica — pastas reais não existem lá
+3. Agente lista os arquivos alterados → usuário cola no editor do PROD (Extensões → Apps Script) → salvar
+4. Se mudou `appsscript.json` (escopos) ou gatilhos: rodar `BSA Toolkit → Instalar gatilhos (setup)` no PROD e autorizar
+5. Se mudou a estrutura da planilha (linhas/colunas/visual): replicar no PROD — via API só no DEV (conector Drive/Sheets do agente é da conta pessoal); no PROD pelo Chrome ou recopiando a planilha
+
 ## Decisão
 Código versionado em `apps-script/` neste repo e enviado com ==`clasp push`== (revisado 2026-10-06 — antes era cópia manual). O repo é a fonte da verdade: alteração feita direto no editor é sobrescrita no próximo push — trazer de volta com `npx @google/clasp pull` antes.
 

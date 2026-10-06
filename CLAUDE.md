@@ -7,6 +7,7 @@ Google Sheet + Apps Script (container-bound) que serve de kit de ferramentas par
 - **Stack:** Google Apps Script V8 · Google Sheets como UI · DriveApp / MailApp / ScriptApp / PropertiesService · UrlFetchApp → API do odoo.com (produção — só leitura sem aprovação) · deploy via `npx @google/clasp push` (`.clasp.json`)
 - **Código:** `apps-script/` (config/, sheets/, services/, tools/) — ainda não criado
 - **Padrão:** camadas Main → tools → sheets (repos) / services
+- **Ambientes:** DEV = planilha da conta pessoal (clasp push) · PROD = planilha da conta `vito@odoo.com` (cópia manual — clasp bloqueado pela TI). Ver `documentation/{general}/deploy-apps-script.md`
 - **Segredos:** `.env` na raiz (ignorado pelo git) — nunca exibir, logar ou commitar o conteúdo
 - **Entry point da doc:** `documentation/{general}/project-overview.md` · plano: `documentation/{reports}/implementation-plan.md`
 
